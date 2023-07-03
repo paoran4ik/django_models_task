@@ -40,11 +40,9 @@ class PostCreate(CreateView):
 
     def form_valid(self, form):
         posts = form.save(commit=False)
-        print("я перед ифом")
+
         if self.request.path == "/article/create/":
             posts.categoryType = "AR"
-            print(self.request.path)
-        print(self.request.path)
         posts.save()
         return super().form_valid(form)
 

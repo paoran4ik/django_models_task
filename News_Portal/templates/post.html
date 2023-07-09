@@ -34,17 +34,33 @@ News
                <td>Дата публикации</td>
                <td>Превью</td>
                <td>Тип публикации</td>
+
+               {# Условие получается составным. #}
+                {% if perms.news.change_post or perms.news.delete_post %}
+                <td>Действия</td>
+                {% endif %}
            </tr>
+
 
 
 
          {% for posts in post %}
             <tr>
-               
+
                <td>{{ posts.title }}</td>
                <td>{{ posts.dateCreation }}</td>
                <td>{{ posts.preview }}</td>
                <td>{{ posts.categoryType }}</td>
+
+               <td>
+                    {# А здесь доступ для каждой ссылки теперь будем проверять отдельно #}
+                    {% if perms.news.change_post %}
+                    <a href="{% url 'post_edit' pk=posts.id %}">Изменить</a>
+                    {% endif %}
+                    {% if perms.news.delete_post %}
+                    <a href="{% url 'post_delete' posts.id %}">Удалить</a>
+                    {% endif %}
+                </td>
 
            </tr>
         {% endfor %}

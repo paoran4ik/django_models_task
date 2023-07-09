@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .filters import PostFilter
@@ -30,7 +30,9 @@ class PostDetail(DetailView):
     context_object_name = 'posts'
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post',)
+    raise_exception = True
     # Указываем нашу разработанную форму
     form_class = PostForm
     # модель товаров
@@ -47,13 +49,17 @@ class PostCreate(CreateView):
         return super().form_valid(form)
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post',)
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
 
 
-class PostDelete(DeleteView):
+class PostDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post',)
+    raise_exception = True
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
